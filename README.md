@@ -24,7 +24,7 @@ Showcase
 All Demos
 ---------
 
-* **[Basics](https://raphaellepuschitz.github.io/SVG-World-Map/demo/basics.html)**
+* **[Basics](https://github.com/aXGaminGBG/SVG-World-Map/demo/basics.html)**
 * **[Custom options](https://raphaellepuschitz.github.io/SVG-World-Map/demo/custom-options.html)**
 * **[Custom callbacks](https://raphaellepuschitz.github.io/SVG-World-Map/demo/custom-callbacks.html)**
 * **[Custom country data](https://raphaellepuschitz.github.io/SVG-World-Map/demo/custom-data.html)**
