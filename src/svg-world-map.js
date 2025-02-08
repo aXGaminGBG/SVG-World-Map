@@ -221,6 +221,19 @@ var svgWorldMap = (function() {
         delete countries['labels']; // Delete labels from countries object, not from map
         // Pre-sort provinces
         sortProvinces();
+
+        // Convert object to JSON format
+        const jsonData = JSON.stringify(provinceToCountry, null, 4);
+
+        // Create a Blob and trigger download
+        const blob = new Blob([jsonData], { type: "application/json" });
+        const a = document.createElement("a");
+        a.href = URL.createObjectURL(blob);
+        a.download = "province_data.json";
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+
         // Sort countries alphabetically
         countries = sortObject(countries);
         // Init country groups
@@ -236,6 +249,14 @@ var svgWorldMap = (function() {
 
     // Pre-sort provinces and subprovinces in countries for faster access and node cleanup
     // TODO: Cleanup, optimize?
+
+    const provinceToCountry = {
+        "California": "USA",
+        "Quebec": "Canada",
+        "Bavaria": "Germany",
+        "Delhi": "India"
+    };
+
     function sortProvinces() {
         for (var country in countries) {
             // Add all details from countryData to country
@@ -296,6 +317,7 @@ var svgWorldMap = (function() {
                 }
             }); 
             countries[country].provinces = provinces; // Add provinces to country
+            provinceToCountry[country] = provinces;
         }
         initMapControls();
         //countCountries();
