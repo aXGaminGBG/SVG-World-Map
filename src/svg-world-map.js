@@ -230,7 +230,7 @@ var svgWorldMap = (function() {
                 key,
                 {
                     country: value.country, // Extract only non-circular data
-                    name: value.tagName,
+                    name: value.id,
                 }
             ])
         );
