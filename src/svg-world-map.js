@@ -230,15 +230,15 @@ var svgWorldMap = (function() {
                 key,
                 {
                     country: value.country, // Extract only non-circular data
-                    name: value.id,
+                    name: value.querySelector("title")?.textContent,
                 }
             ])
         );
 
         const jsonData = JSON.stringify(cleanedData, null, 4);
         console.log(jsonData);
-        console.log("v2");
-        
+        console.log("v3");
+
         // Create a Blob and trigger download
         const blob = new Blob([jsonData], { type: "application/json" });
         const a = document.createElement("a");
