@@ -227,22 +227,27 @@ var svgWorldMap = (function() {
 
         const provinceToCountry = {};  // Assuming cleanedData is where you’re collecting your provinces/countries
 
-        const svgElements = document.querySelectorAll('svg path, svg g');  // Select all relevant SVG elements
+        // Select all the SVG <path> elements (if paths represent provinces/countries)
+        const svgElements = document.querySelectorAll('svg path');  
+        console.log("SVG Path Elements:", svgElements);  // Log all selected path elements
 
         svgElements.forEach((element) => {
-            // Ensure element is an SVG element and has a name (id, title, or data-name)
-            const name = element.id || element.querySelector('title')?.textContent || element.getAttribute('data-name');
-            
-            // Ensure you only add valid names to cleanedData
+            // Log the element to see its attributes
+            console.log("Processing path element:", element);
+
+            // Extract the 'id' attribute, which should be the name of the province/country
+            const name = element.id;  // Assuming each <path> has a unique 'id'
+
+            console.log("Extracted name:", name);  // Log the name (id) of the path
+
             if (name) {
-                provinceToCountry[name] = {};  // Add the name as a key in cleanedData (empty object as placeholder)
+                provinceToCountry[name] = {};  // Add the name (id) as a key in cleanedData (empty object as placeholder)
             }
         });
 
         // Now, convert cleanedData into JSON and download it
         const jsonData = JSON.stringify(provinceToCountry, null, 4);
-        console.log(jsonData);
-        console.log("v3");
+        console.log("Cleaned Data JSON:", jsonData);
 
         // Create a Blob and trigger download
         const blob = new Blob([jsonData], { type: "application/json" });
@@ -252,7 +257,7 @@ var svgWorldMap = (function() {
         document.body.appendChild(a);
         a.click();
         document.body.removeChild(a);
-        
+
         // Sort countries alphabetically
         countries = sortObject(countries);
         // Init country groups
