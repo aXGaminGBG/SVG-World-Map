@@ -225,17 +225,22 @@ var svgWorldMap = (function() {
         // Convert object to JSON format
         //const jsonData = JSON.stringify(provinceToCountry, null, 4);
 
-        const cleanedData = Object.fromEntries(
-            Object.entries(provinceToCountry).map(([key, value]) => [
-                key,
-                {
-                    country: value.country, // Extract only non-circular data
-                    name: value.querySelector("title")?.textContent,
-                }
-            ])
-        );
+        const provinceToCountry = {};  // Assuming cleanedData is where you’re collecting your provinces/countries
 
-        const jsonData = JSON.stringify(cleanedData, null, 4);
+        const svgElements = document.querySelectorAll('svg path, svg g');  // Select all relevant SVG elements
+
+        svgElements.forEach((element) => {
+            // Ensure element is an SVG element and has a name (id, title, or data-name)
+            const name = element.id || element.querySelector('title')?.textContent || element.getAttribute('data-name');
+            
+            // Ensure you only add valid names to cleanedData
+            if (name) {
+                provinceToCountry[name] = {};  // Add the name as a key in cleanedData (empty object as placeholder)
+            }
+        });
+
+        // Now, convert cleanedData into JSON and download it
+        const jsonData = JSON.stringify(provinceToCountry, null, 4);
         console.log(jsonData);
         console.log("v3");
 
@@ -247,7 +252,7 @@ var svgWorldMap = (function() {
         document.body.appendChild(a);
         a.click();
         document.body.removeChild(a);
-
+        
         // Sort countries alphabetically
         countries = sortObject(countries);
         // Init country groups
