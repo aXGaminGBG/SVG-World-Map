@@ -222,30 +222,35 @@ var svgWorldMap = (function() {
         // Pre-sort provinces
         sortProvinces();
 
-        console.log("Provinces:", provinceToCountry)
+        const cleanedData = {}
+
+        provinceToCountry.forEach((element) => {
+            cleanedData[element.id] = element.country.id
+        });
 
         // Convert object to JSON format
-        //const jsonData = JSON.stringify(provinceToCountry, null, 4);
+        const jsonData = JSON.stringify(cleanedData, null, 4);
 
-        //const provinceToCountry = {};  // Assuming cleanedData is where you’re collecting your provinces/countries
+        // Create a Blob and trigger download
+        const blob = new Blob([jsonData], { type: "application/json" });
+        const a = document.createElement("a");
+        a.href = URL.createObjectURL(blob);
+        a.download = "province_data.json";
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
 
-        // Select all the SVG <path> elements (if paths represent provinces/countries)
-
-    // New object to store the reformatted data
-    const cleanedData = {};
-
-    // Convert the cleanedData object into JSON and format it
-    //const jsonData = JSON.stringify(finalData, null, 4);
-    //console.log("Cleaned Data JSON:", jsonData);
-
-    // Create a Blob with the JSON data and trigger the download
-    const blob = new Blob([provinceToCountry], { type: "application/json" });
-    const a = document.createElement("a");
-    a.href = URL.createObjectURL(blob);
-    a.download = "country_paths_data.json";  // The name of the file to download
-    document.body.appendChild(a);
-    a.click();
-    document.body.removeChild(a);
+        // Sort countries alphabetically
+        countries = sortObject(countries);
+        // Init country groups
+        if (options.groupCountries == true) {
+            buildCountryGroups();
+        }
+        // Add group for shapes
+        var shapeGroup = document.createElementNS(svgNS, "g");
+        shapeGroup.setAttribute("id", "shapes");
+        baseNode.appendChild(shapeGroup);
+        shapes = baseNode.getElementById("shapes");
     }
 
     // Pre-sort provinces and subprovinces in countries for faster access and node cleanup
