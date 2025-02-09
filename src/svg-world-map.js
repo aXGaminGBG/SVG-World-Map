@@ -237,6 +237,7 @@ var svgWorldMap = (function() {
 
         const jsonData = JSON.stringify(cleanedData, null, 4);
         console.log(jsonData);
+        console.log("v2");
         
         // Create a Blob and trigger download
         const blob = new Blob([jsonData], { type: "application/json" });
