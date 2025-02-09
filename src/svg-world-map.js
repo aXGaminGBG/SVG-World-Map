@@ -223,8 +223,21 @@ var svgWorldMap = (function() {
         sortProvinces();
 
         // Convert object to JSON format
-        const jsonData = JSON.stringify(provinceToCountry, null, 4);
+        //const jsonData = JSON.stringify(provinceToCountry, null, 4);
 
+        const cleanedData = Object.fromEntries(
+            Object.entries(provinceToCountry).map(([key, value]) => [
+                key,
+                {
+                    country: value.country, // Extract only non-circular data
+                    name: value.name,
+                }
+            ])
+        );
+
+        const jsonData = JSON.stringify(cleanedData, null, 4);
+        console.log(jsonData);
+        
         // Create a Blob and trigger download
         const blob = new Blob([jsonData], { type: "application/json" });
         const a = document.createElement("a");
