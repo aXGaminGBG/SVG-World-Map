@@ -222,23 +222,35 @@ var svgWorldMap = (function() {
         // Pre-sort provinces
         sortProvinces();
 
-        const cleanedData = {}
+const cleanedData = {};
 
-        provinceToCountry.forEach((element) => {
-            cleanedData[element.id] = element.country.id
-        });
+// Assuming provinceToCountry looks like this:
+// {
+//   AU: ["path#path10368", "path#path10369"],
+//   CA: ["path#path10370", "path#path10371"],
+//   ...
+// }
 
-        // Convert object to JSON format
-        const jsonData = JSON.stringify(cleanedData, null, 4);
+// Iterate over the provinceToCountry object
+Object.entries(provinceToCountry).forEach(([country, provinces]) => {
+    // For each country, we iterate over its provinces/paths
+    provinces.forEach((province) => {
+        // Create an entry in cleanedData with the province ID as key
+        cleanedData[province] = country;
+    });
+});
 
-        // Create a Blob and trigger download
-        const blob = new Blob([jsonData], { type: "application/json" });
-        const a = document.createElement("a");
-        a.href = URL.createObjectURL(blob);
-        a.download = "province_data.json";
-        document.body.appendChild(a);
-        a.click();
-        document.body.removeChild(a);
+// Convert cleanedData object to JSON format
+const jsonData = JSON.stringify(cleanedData, null, 4);
+
+// Create a Blob and trigger download
+const blob = new Blob([jsonData], { type: "application/json" });
+const a = document.createElement("a");
+a.href = URL.createObjectURL(blob);
+a.download = "province_data.json";  // Name of the downloaded file
+document.body.appendChild(a);
+a.click();
+document.body.removeChild(a);
 
         // Sort countries alphabetically
         countries = sortObject(countries);
@@ -256,7 +268,7 @@ var svgWorldMap = (function() {
     // Pre-sort provinces and subprovinces in countries for faster access and node cleanup
     // TODO: Cleanup, optimize?
 
-    var provinceToCountry = [];
+    const provinceToCountry = {};
 
     function sortProvinces() {
         for (var country in countries) {
