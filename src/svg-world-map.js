@@ -230,35 +230,17 @@ var svgWorldMap = (function() {
         //const provinceToCountry = {};  // Assuming cleanedData is where you’re collecting your provinces/countries
 
         // Select all the SVG <path> elements (if paths represent provinces/countries)
-        const svgElements = document.querySelectorAll('svg path');  
-       // console.log("SVG Path Elements:", svgElements);  // Log all selected path elements
+const cleanedData = Object.fromEntries(
+    Object.entries(provinceToCountry).map(([key, value]) => [
+        key,
+        {
+            name: value.id,
+        }
+    ])
+);
 
-        svgElements.forEach((element) => {
-            // Log the element to see its attributes
-            console.log("Processing path element:", element);
-
-            // Extract the 'id' attribute, which should be the name of the province/country
-            const name = element.id;  // Assuming each <path> has a unique 'id'
-
-            console.log("Extracted name:", name);  // Log the name (id) of the path
-
-            if (name) {
-                provinceToCountry[name] = {};  // Add the name (id) as a key in cleanedData (empty object as placeholder)
-            }
-        });
-
-        // Now, convert cleanedData into JSON and download it
-        const jsonData = JSON.stringify(provinceToCountry, null, 4);
-        console.log("Cleaned Data JSON:", jsonData);
-
-        // Create a Blob and trigger download
-        const blob = new Blob([jsonData], { type: "application/json" });
-        const a = document.createElement("a");
-        a.href = URL.createObjectURL(blob);
-        a.download = "province_data.json";
-        document.body.appendChild(a);
-        a.click();
-        document.body.removeChild(a);
+const jsonData = JSON.stringify(cleanedData, null, 4);
+console.log(jsonData);
 
         // Sort countries alphabetically
         countries = sortObject(countries);
@@ -276,12 +258,7 @@ var svgWorldMap = (function() {
     // Pre-sort provinces and subprovinces in countries for faster access and node cleanup
     // TODO: Cleanup, optimize?
 
-    const provinceToCountry = {
-        "California": "USA",
-        "Quebec": "Canada",
-        "Bavaria": "Germany",
-        "Delhi": "India"
-    };
+    const provinceToCountry = {};
 
     function sortProvinces() {
         for (var country in countries) {
