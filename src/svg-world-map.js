@@ -236,7 +236,7 @@ Object.entries(provinceToCountry).forEach(([country, provinces]) => {
     // For each country, we iterate over its provinces/paths
     provinces.forEach((province) => {
         // Create an entry in cleanedData with the province ID as key
-        cleanedData[province] = country;
+        cleanedData[province.id] = country;
     });
 });
 
