@@ -230,29 +230,33 @@ var svgWorldMap = (function() {
         //const provinceToCountry = {};  // Assuming cleanedData is where you’re collecting your provinces/countries
 
         // Select all the SVG <path> elements (if paths represent provinces/countries)
-const cleanedData = Object.fromEntries(
-    Object.entries(provinceToCountry).map(([key, value]) => [
-        key,
-        {
-            name: value.id,
-        }
-    ])
-);
 
-const jsonData = JSON.stringify(cleanedData, null, 4);
-console.log(jsonData);
+        const cleanedData = {};
 
-        // Sort countries alphabetically
-        countries = sortObject(countries);
-        // Init country groups
-        if (options.groupCountries == true) {
-            buildCountryGroups();
+        // Iterate over the provinceToCountry mapping and convert arrays to objects (sets)
+        Object.entries(provinceToCountry).forEach(([country, paths]) => {
+            // Use Set-like behavior by creating an object of paths
+            cleanedData[country] = new Set(paths);
+        });
+
+        // Convert the Set to an array if you want a standard JSON output
+        const finalData = {};
+        for (const country in cleanedData) {
+            finalData[country] = Array.from(cleanedData[country]);
         }
-        // Add group for shapes
-        var shapeGroup = document.createElementNS(svgNS, "g");
-        shapeGroup.setAttribute("id", "shapes");
-        baseNode.appendChild(shapeGroup);
-        shapes = baseNode.getElementById("shapes");
+
+        // Convert the cleanedData object into JSON and format it
+        const jsonData = JSON.stringify(finalData, null, 4);
+        console.log("Cleaned Data JSON:", jsonData);
+
+        // Create a Blob with the JSON data and trigger the download
+        const blob = new Blob([jsonData], { type: "application/json" });
+        const a = document.createElement("a");
+        a.href = URL.createObjectURL(blob);
+        a.download = "country_paths_data.json";  // The name of the file to download
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
     }
 
     // Pre-sort provinces and subprovinces in countries for faster access and node cleanup
