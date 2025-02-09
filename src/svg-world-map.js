@@ -256,7 +256,7 @@ var svgWorldMap = (function() {
     // Pre-sort provinces and subprovinces in countries for faster access and node cleanup
     // TODO: Cleanup, optimize?
 
-    const provinceToCountry = {};
+    var provinceToCountry = [];
 
     function sortProvinces() {
         for (var country in countries) {
