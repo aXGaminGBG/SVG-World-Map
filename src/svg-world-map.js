@@ -231,32 +231,50 @@ var svgWorldMap = (function() {
 
         // Select all the SVG <path> elements (if paths represent provinces/countries)
 
-        const cleanedData = {};
+    // New object to store the reformatted data
+    const cleanedData = {};
 
-        // Iterate over the provinceToCountry mapping and convert arrays to objects (sets)
-        Object.entries(provinceToCountry).forEach(([country, paths]) => {
-            // Use Set-like behavior by creating an object of paths
-            cleanedData[country] = new Set(paths);
-        });
+    // Select all <path> elements in the SVG
+    const svgElements = document.querySelectorAll('svg path');
+    console.log("SVG Path Elements:", svgElements);  // Log selected path elements
 
-        // Convert the Set to an array if you want a standard JSON output
-        const finalData = {};
-        for (const country in cleanedData) {
-            finalData[country] = Array.from(cleanedData[country]);
+    // Iterate over each SVG element and map its id to the correct country
+    svgElements.forEach((element) => {
+        const pathId = element.id;  // Extract the id of the SVG path
+        console.log("Processing path ID:", pathId);
+
+        // Loop through each country and check if the pathId belongs to that country
+        for (const [country, paths] of Object.entries(provinceToCountry)) {
+            if (paths.includes(pathId)) {
+                // If the country doesn't exist yet in cleanedData, initialize it
+                if (!cleanedData[country]) {
+                    cleanedData[country] = new Set();
+                }
+
+                // Add the pathId to the set of paths for that country
+                cleanedData[country].add(pathId);
+            }
         }
+    });
 
-        // Convert the cleanedData object into JSON and format it
-        const jsonData = JSON.stringify(finalData, null, 4);
-        console.log("Cleaned Data JSON:", jsonData);
+    // Convert the Set-like structure to an array
+    const finalData = {};
+    for (const country in cleanedData) {
+        finalData[country] = Array.from(cleanedData[country]);
+    }
 
-        // Create a Blob with the JSON data and trigger the download
-        const blob = new Blob([jsonData], { type: "application/json" });
-        const a = document.createElement("a");
-        a.href = URL.createObjectURL(blob);
-        a.download = "country_paths_data.json";  // The name of the file to download
-        document.body.appendChild(a);
-        a.click();
-        document.body.removeChild(a);
+    // Convert the cleanedData object into JSON and format it
+    const jsonData = JSON.stringify(finalData, null, 4);
+    console.log("Cleaned Data JSON:", jsonData);
+
+    // Create a Blob with the JSON data and trigger the download
+    const blob = new Blob([jsonData], { type: "application/json" });
+    const a = document.createElement("a");
+    a.href = URL.createObjectURL(blob);
+    a.download = "country_paths_data.json";  // The name of the file to download
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
     }
 
     // Pre-sort provinces and subprovinces in countries for faster access and node cleanup
