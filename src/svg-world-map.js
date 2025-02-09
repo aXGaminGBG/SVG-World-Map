@@ -222,14 +222,16 @@ var svgWorldMap = (function() {
         // Pre-sort provinces
         sortProvinces();
 
+        console.log("Provinces:", provinceToCountry)
+
         // Convert object to JSON format
         //const jsonData = JSON.stringify(provinceToCountry, null, 4);
 
-        const provinceToCountry = {};  // Assuming cleanedData is where you’re collecting your provinces/countries
+        //const provinceToCountry = {};  // Assuming cleanedData is where you’re collecting your provinces/countries
 
         // Select all the SVG <path> elements (if paths represent provinces/countries)
         const svgElements = document.querySelectorAll('svg path');  
-        console.log("SVG Path Elements:", svgElements);  // Log all selected path elements
+       // console.log("SVG Path Elements:", svgElements);  // Log all selected path elements
 
         svgElements.forEach((element) => {
             // Log the element to see its attributes
